@@ -1,0 +1,15 @@
+{
+  "site": {
+    "name": "كينق لاو",
+    "description": "موقع كينق لاو التعريفي",
+    "serverLink": "",
+    "discordLink": "",
+    "backgroundImage": "https://cdn.discordapp.com/attachments/1469103836667973857/1469103978473062631/1_20260123_003938_.png?ex=6990fd33&is=698fabb3&hm=790700291e293a2a2c57ea5668189ee4d228736694065f9e01c00056ca7bf08d&"
+  },
+  "colors": {
+ 
+  "primary": "#C79A1B",
+  "dark": "#1A140B",
+  "light": "#D6AD32"
+}
+}
