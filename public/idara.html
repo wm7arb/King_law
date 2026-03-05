@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كينق لاو | لوحة الإدارة </title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: #1A1A1A;
+            color: #F5F5F5;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Loading Screen */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+        }
+        
+        .loading-card {
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid #C79A1B;
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(199, 154, 27, 0.3);
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(199, 154, 27, 0.3);
+            border-radius: 50%;
+            border-top-color: #C79A1B;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* No Access Screen */
+        .no-access-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+        }
+        
+        .no-access-card {
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid #C79A1B;
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .no-access-card i {
+            color: #C79A1B;
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .no-access-card h1 {
+            color: #C79A1B;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .no-access-card p {
+            color: #9E9E9E;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 12px 35px;
+            border-radius: 30px;
+            border: 2px solid #C79A1B;
+            background: transparent;
+            color: #C79A1B;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #C79A1B;
+            color: #1A1A1A;
+            box-shadow: 0 0 20px #C79A1B;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(to right, rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.85));
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #C79A1B;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            color: #C79A1B !important;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(199, 154, 27, 0.5);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: #F5F5F5;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(199, 154, 27, 0.2);
+        }
+        
+        .nav-links a.active {
+            background: #C79A1B;
+            color: #1A1A1A;
+        }
+        
+        .logout-btn {
+            color: #FF4757 !important;
+            border: 1px solid #FF4757;
+        }
+        
+        .logout-btn:hover {
+            background: #FF4757 !important;
+            color: #F5F5F5 !important;
+        }
+        
+        /* Admin Header */
+        .admin-header {
+            background: linear-gradient(135deg, rgba(199, 154, 27, 0.1), rgba(0, 0, 0, 0.3));
+            border: 2px solid #C79A1B;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .admin-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .admin-title i {
+            color: #C79A1B;
+            font-size: 2.5rem;
+            text-shadow: 0 0 20px rgba(199, 154, 27, 0.5);
+        }
+        
+        .admin-title h1 {
+            color: #C79A1B;
+            font-size: 2rem;
+            margin: 0;
+        }
+        
+        .admin-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(199, 154, 27, 0.3);
+        }
+        
+        .admin-info p {
+            margin: 5px 0;
+            color: #9E9E9E;
+        }
+        
+        .admin-info i {
+            color: #C79A1B;
+            margin-left: 8px;
+        }
+        
+        /* Dashboard Grid - تعديل لعمودين فقط */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Dashboard Card */
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(199, 154, 27, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            border-color: #C79A1B;
+            box-shadow: 0 0 30px rgba(199, 154, 27, 0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(199, 154, 27, 0.3);
+        }
+        
+        .card-header i {
+            color: #C79A1B;
+            font-size: 1.8rem;
+        }
+        
+        .card-header h2 {
+            color: #C79A1B;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        
+        /* Category Selector */
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .category-btn {
+            padding: 10px;
+            border: 2px solid #C79A1B;
+            background: transparent;
+            color: #C79A1B;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: #C79A1B;
+            color: #1A1A1A;
+            box-shadow: 0 0 20px #C79A1B;
+        }
+        
+        /* Rules List */
+        .rules-list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-left: 5px;
+        }
+        
+        .rule-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-right: 4px solid #C79A1B;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+        
+        .rule-item:hover {
+            background: rgba(199, 154, 27, 0.1);
+            transform: translateX(-5px);
+        }
+        
+        .rule-text {
+            color: #E0E0E0;
+            line-height: 1.6;
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .rule-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .rule-btn {
+            background: transparent;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .edit-btn {
+            border-color: #4ecdc4;
+            color: #4ecdc4;
+        }
+        
+        .edit-btn:hover {
+            background: #4ecdc4;
+            color: #1A1A1A;
+            box-shadow: 0 0 15px #4ecdc4;
+        }
+        
+        .delete-btn {
+            border-color: #FF4757;
+            color: #FF4757;
+        }
+        
+        .delete-btn:hover {
+            background: #FF4757;
+            color: #F5F5F5;
+            box-shadow: 0 0 15px #FF4757;
+        }
+        
+        /* Add Rule Form */
+        .add-rule-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .rule-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(199, 154, 27, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            color: #F5F5F5;
+            font-family: 'Cairo', sans-serif;
+            resize: vertical;
+            font-size: 1rem;
+        }
+        
+        .rule-input:focus {
+            outline: none;
+            border-color: #C79A1B;
+            box-shadow: 0 0 10px rgba(199, 154, 27, 0.3);
+        }
+        
+        .add-btn {
+            padding: 12px;
+            border: 2px solid #C79A1B;
+            background: transparent;
+            color: #C79A1B;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .add-btn:hover {
+            background: #C79A1B;
+            color: #1A1A1A;
+            box-shadow: 0 0 20px #C79A1B;
+        }
+        
+        /* Founders List */
+        .founders-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .founder-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(199, 154, 27, 0.3);
+        }
+        
+        .founder-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .founder-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #C79A1B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1A1A1A;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .founder-details {
+            flex: 1;
+        }
+        
+        .founder-details h4 {
+            color: #C79A1B;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .founder-details p {
+            color: #9E9E9E;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .founder-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .remove-founder-btn {
+            border: 2px solid #FF4757;
+            background: transparent;
+            color: #FF4757;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-founder-btn:hover {
+            background: #FF4757;
+            color: #F5F5F5;
+            box-shadow: 0 0 15px #FF4757;
+        }
+        
+        .add-founder-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .founder-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(199, 154, 27, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            color: #F5F5F5;
+            font-size: 1rem;
+        }
+        
+        .founder-input:focus {
+            outline: none;
+            border-color: #C79A1B;
+        }
+        
+        .founder-input::placeholder {
+            color: #9E9E9E;
+            opacity: 0.5;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: #1A1A1A;
+            border: 2px solid #C79A1B;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            padding: 30px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(199, 154, 27, 0.3);
+        }
+        
+        .modal-header h3 {
+            color: #C79A1B;
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #C79A1B;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .save-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #4ecdc4;
+            background: transparent;
+            color: #4ecdc4;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .save-btn:hover {
+            background: #4ecdc4;
+            color: #1A1A1A;
+            box-shadow: 0 0 20px #4ecdc4;
+        }
+        
+        .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #FF4757;
+            background: transparent;
+            color: #FF4757;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cancel-btn:hover {
+            background: #FF4757;
+            color: #F5F5F5;
+            box-shadow: 0 0 20px #FF4757;
+        }
+        
+        /* Back Button */
+        .back-btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 12px 35px;
+            border-radius: 30px;
+            border: 2px solid #4ecdc4;
+            background: transparent;
+            color: #4ecdc4;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .back-btn:hover {
+            background: #4ecdc4;
+            color: #1A1A1A;
+            box-shadow: 0 0 20px #4ecdc4;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #C79A1B;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A67B0F;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px dashed #C79A1B;
+            color: #9E9E9E;
+        }
+        
+        .empty-state i {
+            color: #C79A1B;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- شاشة التحميل -->
+    <div id="loading-screen" class="loading-container" style="display: flex;">
+        <div class="loading-card">
+            <div class="loading-spinner"></div>
+            <h2 style="color: #C79A1B; margin-top: 20px;">جاري التحقق من الصلاحيات...</h2>
+            <p style="color: #9E9E9E;">الرجاء الانتظار</p>
+        </div>
+    </div>
+    
+    <!-- شاشة عدم الصلاحية -->
+    <div id="no-access-screen" class="no-access-container" style="display: none;">
+        <div class="no-access-card">
+            <i class="fas fa-lock"></i>
+            <h1>غير مصرح بالدخول</h1>
+            <p id="error-message">عذراً، ليس لديك صلاحية الدخول إلى لوحة الإدارة.</p>
+            <p style="font-size: 1rem; color: #9E9E9E;">هذه الصفحة مخصصة فقط لأعضاء رتبة الإدارة.</p>
+            <a href="/" class="back-btn" style="margin-top: 20px;">
+                <i class="fas fa-home"></i> العودة للرئيسية
+            </a>
+        </div>
+    </div>
+    
+    <!-- محتوى لوحة الإدارة -->
+    <div id="admin-panel" style="display: none;">
+        <nav class="navbar">
+            <div class="container">
+                <a href="/" class="navbar-brand">كينق لاؤ</a>
+                <div class="nav-links">
+                    <a href="/">الرئيسية</a>
+                    <a href="/founders.html">مؤسسين السيرفر</a>
+                    <a href="/rules.html">قوانين الموقع</a>
+                    <a href="/idara.html" class="active">لوحة الإدارة</a>
+                    <a href="/auth/logout" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل خروج
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <!-- Admin Header -->
+            <div class="admin-header">
+                <div class="admin-title">
+                    <i class="fas fa-crown"></i>
+                    <h1>لوحة الإدارة</h1>
+                </div>
+                <div class="admin-info" id="admin-info">
+                    <p><i class="fas fa-user"></i> <span id="admin-name">...</span></p>
+                    <p><i class="fas fa-tag"></i> <span id="admin-tag">...</span></p>
+                    <p><i class="fas fa-shield"></i> رتبة الإدارة</p>
+                </div>
+            </div>
+            
+            <!-- Dashboard Grid - قسمين فقط -->
+            <div class="dashboard-grid">
+                <!-- قسم إدارة القوانين -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <i class="fas fa-book"></i>
+                        <h2>إدارة القوانين</h2>
+                    </div>
+                    
+                    <!-- اختيار القسم -->
+                    <div class="category-selector" id="category-selector">
+                        <button class="category-btn active" data-category="crime">الاجرام</button>
+                        <button class="category-btn" data-category="discord">الديسكورد</button>
+                        <button class="category-btn" data-category="realism">الواقعية</button>
+                        <button class="category-btn" data-category="accounts">الحسابات</button>
+                        <button class="category-btn" data-category="game">اللعبة</button>
+                        <button class="category-btn" data-category="safe">المناطق الآمنة</button>
+                        <button class="category-btn" data-category="admin">الصلاحيات</button>
+                        <button class="category-btn" data-category="mission">المهمة</button>
+                    </div>
+                    
+                    <!-- قائمة القوانين -->
+                    <div class="rules-list-container" id="rules-list">
+                        <!-- القوانين تظهر هنا -->
+                    </div>
+                    
+                    <!-- إضافة قانون جديد -->
+                    <div class="add-rule-form">
+                        <h3 style="color: #C79A1B; margin-bottom: 10px;">إضافة قانون جديد</h3>
+                        <textarea id="new-rule" class="rule-input" rows="3" placeholder="اكتب القانون الجديد..."></textarea>
+                        <button class="add-btn" id="add-rule-btn">
+                            <i class="fas fa-plus"></i> إضافة القانون
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- قسم إدارة المؤسسين -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <i class="fas fa-users"></i>
+                        <h2>إدارة المؤسسين</h2>
+                    </div>
+                    
+                    <!-- قائمة المؤسسين -->
+                    <h3 style="color: #C79A1B; margin-bottom: 15px;">المؤسسين الحاليين</h3>
+                    <div class="founders-list" id="founders-list">
+                        <!-- المؤسسين يظهرون هنا -->
+                    </div>
+                    
+                    <!-- إضافة مؤسس جديد -->
+                    <h3 style="color: #C79A1B; margin-bottom: 10px;">إضافة مؤسس جديد</h3>
+                    <div class="add-founder-form">
+                        <input type="text" id="new-founder-name" class="founder-input" placeholder="اسم المؤسس *" required>
+                        <input type="text" id="new-founder-role" class="founder-input" placeholder="المنصب (مثلاً: المؤسس الرئيسي)">
+                        <textarea id="new-founder-description" class="rule-input" rows="3" placeholder="وصف المؤسس..."></textarea>
+                        <button class="add-btn" id="add-founder-btn">
+                            <i class="fas fa-user-plus"></i> إضافة مؤسس
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- زر الرجوع -->
+            <div class="back-btn-container">
+                <a href="/" class="back-btn">
+                    <i class="fas fa-home"></i> الرجوع إلى الرئيسية
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal تعديل القانون -->
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> تعديل القانون</h3>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="edit-rule-text" class="rule-input" rows="4"></textarea>
+                <div class="modal-buttons">
+                    <button class="save-btn" onclick="saveEditedRule()">
+                        <i class="fas fa-save"></i> حفظ
+                    </button>
+                    <button class="cancel-btn" onclick="closeEditModal()">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // التحقق من الصلاحية فور تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const meResponse = await fetch('/api/me');
+                const meData = await meResponse.json();
+                
+                if (!meData.authenticated) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                const adminResponse = await fetch('/api/check-admin');
+                const adminData = await adminResponse.json();
+                
+                if (adminData.isAdmin) {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('no-access-screen').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    
+                    document.getElementById('admin-name').textContent = adminData.username || meData.user.username;
+                    document.getElementById('admin-tag').textContent = adminData.tag || meData.user.tag;
+                    
+                    await loadRules();
+                    await loadFounders();
+                } else {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('no-access-screen').style.display = 'flex';
+                    document.getElementById('admin-panel').style.display = 'none';
+                    
+                    const errorMsg = adminData.message || 'ليس لديك صلاحية الإدارة';
+                    document.getElementById('error-message').textContent = errorMsg;
+                }
+                
+            } catch (error) {
+                console.error('❌ خطأ في التحقق:', error);
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('no-access-screen').style.display = 'flex';
+                document.getElementById('admin-panel').style.display = 'none';
+                document.getElementById('error-message').textContent = 'حدث خطأ في الاتصال بالخادم';
+            }
+        });
+        
+        // متغيرات التطبيق
+        let currentCategory = 'crime';
+        let currentEditCategory = null;
+        let currentEditIndex = null;
+        let rulesData = {};
+
+        // ============ دوال القوانين ============
+        async function loadRules() {
+            try {
+                const response = await fetch('/api/rules');
+                const result = await response.json();
+                
+                if (result.success) {
+                    rulesData = result.rules;
+                    displayRules(currentCategory);
+                }
+            } catch (error) {
+                console.error('Error loading rules:', error);
+                document.getElementById('rules-list').innerHTML = '<p style="color: #FF4757; text-align: center;">❌ حدث خطأ في تحميل القوانين</p>';
+            }
+        }
+
+        function displayRules(category) {
+            const rulesList = document.getElementById('rules-list');
+            const rules = rulesData[category] || [];
+            
+            if (rules.length === 0) {
+                rulesList.innerHTML = '<p style="color: #9E9E9E; text-align: center; padding: 20px;">لا توجد قوانين في هذا القسم</p>';
+                return;
+            }
+            
+            let html = '';
+            rules.forEach((rule, index) => {
+                html += `
+                    <div class="rule-item">
+                        <div class="rule-text">${escapeHtml(rule)}</div>
+                        <div class="rule-actions">
+                            <button class="rule-btn edit-btn" onclick="editRule('${category}', ${index}, '${escapeHtml(rule).replace(/'/g, "\\'")}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="rule-btn delete-btn" onclick="deleteRule('${category}', ${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            rulesList.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                displayRules(currentCategory);
+            });
+        });
+
+        document.getElementById('add-rule-btn').addEventListener('click', async () => {
+            const newRule = document.getElementById('new-rule').value.trim();
+            
+            if (!newRule) {
+                alert('❌ الرجاء كتابة نص القانون');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/add-rule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category: currentCategory, rule: newRule })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ تم إضافة القانون بنجاح');
+                    document.getElementById('new-rule').value = '';
+                    await loadRules();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error adding rule:', error);
+                alert('❌ حدث خطأ أثناء إضافة القانون');
+            }
+        });
+
+        window.editRule = function(category, index, rule) {
+            currentEditCategory = category;
+            currentEditIndex = index;
+            document.getElementById('edit-rule-text').value = rule;
+            document.getElementById('edit-modal').style.display = 'flex';
+        }
+
+        window.saveEditedRule = async function() {
+            const newRule = document.getElementById('edit-rule-text').value.trim();
+            
+            if (!newRule) {
+                alert('❌ الرجاء كتابة نص القانون');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/edit-rule', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        category: currentEditCategory,
+                        index: currentEditIndex,
+                        newRule: newRule
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ تم تعديل القانون بنجاح');
+                    closeEditModal();
+                    await loadRules();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error editing rule:', error);
+                alert('❌ حدث خطأ أثناء تعديل القانون');
+            }
+        }
+
+        window.deleteRule = async function(category, index) {
+            if (!confirm('هل أنت متأكد من حذف هذا القانون؟')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/delete-rule?category=${category}&index=${index}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ تم حذف القانون بنجاح');
+                    await loadRules();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting rule:', error);
+                alert('❌ حدث خطأ أثناء حذف القانون');
+            }
+        }
+
+        window.closeEditModal = function() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+
+        // ============ دوال المؤسسين ============
+        async function loadFounders() {
+            try {
+                const response = await fetch('/api/founders');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayFounders(result.founders);
+                }
+            } catch (error) {
+                console.error('Error loading founders:', error);
+                document.getElementById('founders-list').innerHTML = '<p class="empty-state">❌ حدث خطأ في تحميل المؤسسين</p>';
+            }
+        }
+
+        function displayFounders(founders) {
+            const foundersList = document.getElementById('founders-list');
+            
+            if (!founders || founders.length === 0) {
+                foundersList.innerHTML = '<div class="empty-state"><i class="fas fa-users-slash"></i><p>لا يوجد مؤسسين حالياً</p></div>';
+                return;
+            }
+            
+            let html = '';
+            founders.forEach(founder => {
+                const initial = founder.name ? founder.name.charAt(0).toUpperCase() : 'م';
+                html += `
+                    <div class="founder-item">
+                        <div class="founder-info">
+                            <div class="founder-avatar">${initial}</div>
+                            <div class="founder-details">
+                                <h4>${escapeHtml(founder.name)}</h4>
+                                <p><i class="fas fa-crown"></i> ${escapeHtml(founder.role) || 'مؤسس'}</p>
+                                <p><i class="fas fa-info-circle"></i> ${escapeHtml(founder.description) || 'لا يوجد وصف'}</p>
+                                <p><i class="fas fa-calendar-alt"></i> أضيف في: ${new Date(founder.addedAt).toLocaleDateString('ar-EG')}</p>
+                            </div>
+                        </div>
+                        <div class="founder-actions">
+                            <button class="rule-btn edit-btn" onclick="editFounder('${founder.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="remove-founder-btn" onclick="deleteFounder('${founder.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            foundersList.innerHTML = html;
+        }
+
+        document.getElementById('add-founder-btn').addEventListener('click', async () => {
+            const name = document.getElementById('new-founder-name').value.trim();
+            const role = document.getElementById('new-founder-role').value.trim();
+            const description = document.getElementById('new-founder-description').value.trim();
+            
+            if (!name) {
+                alert('❌ الرجاء إدخال اسم المؤسس');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/add-founder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, role, description })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ تم إضافة المؤسس بنجاح');
+                    document.getElementById('new-founder-name').value = '';
+                    document.getElementById('new-founder-role').value = '';
+                    document.getElementById('new-founder-description').value = '';
+                    await loadFounders();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error adding founder:', error);
+                alert('❌ حدث خطأ أثناء إضافة المؤسس');
+            }
+        });
+
+        window.deleteFounder = async function(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا المؤسس؟')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/delete-founder?id=${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ تم حذف المؤسس بنجاح');
+                    await loadFounders();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting founder:', error);
+                alert('❌ حدث خطأ أثناء حذف المؤسس');
+            }
+        }
+
+        window.editFounder = async function(id) {
+            const newName = prompt('أدخل الاسم الجديد للمؤسس:');
+            if (newName === null) return;
+            
+            const newRole = prompt('أدخل المنصب الجديد للمؤسس:');
+            if (newRole === null) return;
+            
+            const newDescription = prompt('أدخل الوصف الجديد للمؤسس:');
+            if (newDescription === null) return;
+            
+            try {
+                const response = await fetch('/api/edit-founder', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        id, 
+                        name: newName.trim(), 
+                        role: newRole.trim(),
+                        description: newDescription.trim() 
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ تم تعديل المؤسس بنجاح');
+                    await loadFounders();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error editing founder:', error);
+                alert('❌ حدث خطأ أثناء تعديل المؤسس');
+            }
+        }
+
+        // إغلاق المودال عند الضغط خارج المحتوى
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('edit-modal');
+            if (e.target === modal) {
+                closeEditModal();
+            }
+        });
+
+        // إغلاق المودال بمفتاح ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+    </script>
+</body>
+</html>
